@@ -80,27 +80,55 @@ RegisterNUICallback('getNotifyConfig', function(_, cb)
     cb(QBCore.Config.Notify)
 end)
 
-function QBCore.Functions.Notify(text, texttype, length)
+function QBCore.Functions.Notify(text, texttype, length, icon)
+    if not icon then
+        icon = 'fas fa-inbox'
+    end
+    if texttype == 'ambulance' then
+        icon = 'fas fa-ambulance'
+    elseif texttype == 'police' then
+        icon = 'fas fa-handcuffs'
+    elseif texttype == 'error' then
+        icon = 'fas fa-bug'
+    elseif texttype == 'primary' then
+        icon = 'fas fa-inbox'
+    elseif texttype == 'success' then
+        icon = 'fas fa-check'
+    end
     if type(text) == "table" then
         local ttext = text.text or 'Placeholder'
         local caption = text.caption or 'Placeholder'
         texttype = texttype or 'primary'
         length = length or 5000
-        SendNUIMessage({
-            action = 'notify',
+        -- SendNUIMessage({
+        --     action = 'notify',
+        --     type = texttype,
+        --     length = length,
+        --     text = ttext,
+        --     caption = caption
+        -- })
+        -- TriggerEvent("SNZ_UI:AddNotification", ttext, caption, length, icon)
+        lib.notify({
+            title = ttext,
+            description = caption,
             type = texttype,
-            length = length,
-            text = ttext,
-            caption = caption
+            duration = length
         })
     else
         texttype = texttype or 'primary'
         length = length or 5000
-        SendNUIMessage({
-            action = 'notify',
+        -- SendNUIMessage({
+        --     action = 'notify',
+        --     type = texttype,
+        --     length = length,
+        --     text = text
+        -- })
+        -- TriggerEvent("SNZ_UI:AddNotification", '', text, length, icon)
+        lib.notify({
+            title = 'Notification',
+            description = text,
             type = texttype,
-            length = length,
-            text = text
+            duration = length
         })
     end
 end
